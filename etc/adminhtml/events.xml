@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="product_attribute_grid_build">
+        <observer name="staempfli_commerceimport_product_attribute_grid_build" instance="Staempfli\CommerceImport\Observer\AttributeGrid" />
+    </event>
+    <event name="catalog_product_import_finish_before">
+        <observer name="staempfli_commerceimport_delete_deprecated_linked_products_after_import" instance="Staempfli\CommerceImport\Observer\DeleteDeprecatedLinkedProducts" />
+    </event>
+</config>

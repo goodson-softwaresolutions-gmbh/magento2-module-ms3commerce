@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ms3commerce>
+            <default>
+                <behavior>append</behavior>
+                <validation_strategy>validation-stop-on-errors</validation_strategy>
+                <allowed_error_count>10</allowed_error_count>
+                <multiple_values_separator>;</multiple_values_separator>
+                <import_images_file_dir>pub</import_images_file_dir>
+            </default>
+            <price>
+                <tier_price_prefix>tier_price</tier_price_prefix>
+                <tier_qty_prefix>tier_qty</tier_qty_prefix>
+            </price>
+            <category>
+                <assignation_mode>default</assignation_mode>
+                <delete_old_assignations>0</delete_old_assignations>
+                <skip>0</skip>
+            </category>
+            <product>
+                <add_sku_to_child_url_key>1</add_sku_to_child_url_key>
+                <add_sku_to_parent_url_key>0</add_sku_to_parent_url_key>
+            </product>
+            <attribute>
+                <keep_magento_sort_order>0</keep_magento_sort_order>
+            </attribute>
+            <reader>
+                <ignore_invalid_images>0</ignore_invalid_images>
+                <handle_special_chars>remove</handle_special_chars>
+            </reader>
+        </ms3commerce>
+        <chatconnector>
+            <notifications>
+                <staempfli_commerceimport_notifications>
+                    <description>CommerceImport: Notifications</description>
+                    <class>Staempfli\CommerceImport\Model\Event\Manager</class>
+                </staempfli_commerceimport_notifications>
+            </notifications>
+        </chatconnector>
+    </default>
+</config>

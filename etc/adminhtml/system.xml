@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<config xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <system>
+        <tab id="staempfli" translate="label" sortOrder="800">
+            <label>Staempfli</label>
+        </tab>
+        <section id="ms3commerce" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>mS3 Commerce Import</label>
+            <tab>staempfli</tab>
+            <resource>Staempfli_CommerceImport::config_ms3commerce</resource>
+            <group id="default" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Import Configuration</label>
+                <field id="behavior" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Behavior</label>
+                    <source_model>Staempfli\CommerceImport\Model\Config\Source\Behavior</source_model>
+                </field>
+                <field id="validation_strategy" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Validation Strategy</label>
+                    <source_model>Staempfli\CommerceImport\Model\Config\Source\ValidationStrategy</source_model>
+                </field>
+                <field id="multiple_values_separator" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Multiple Values Separator</label>
+                    <source_model>Staempfli\CommerceImport\Model\Config\Source\Separator</source_model>
+                </field>
+                <field id="allowed_error_count" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Allowed Error Count</label>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="import_images_file_dir" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Import Images Directory</label>
+                    <comment>For Type "Local Server" use relative path to Magento installation, e.g. var/export, var/import, var/export/some/dir</comment>
+                </field>
+            </group>
+            <group id="mapping" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Mapping Configuration</label>
+                <field id="market_id" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Market ID</label>
+                    <frontend_class>validate-number</frontend_class>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="lang_id" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Language ID</label>
+                    <frontend_class>validate-number</frontend_class>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="master" translate="label" type="select" sortOrder="40" showInDefault="0" showInWebsite="1" showInStore="0">
+                    <label>Structure Master</label>
+                    <source_model>Staempfli\CommerceImport\Model\Config\Source\StructureMaster</source_model>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="notice" translate="label" type="note" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Notice</label>
+                    <comment>The Mapping must be defined by Website or Store</comment>
+                </field>
+            </group>
+            <group id="price" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Price Configuration</label>
+                <field id="tier_price_prefix" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Tier Price Prefix</label>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="tier_qty_prefix" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Tier Quantity Prefix</label>
+                    <validate>required-entry</validate>
+                </field>
+            </group>
+            <group id="product" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Product Configuration</label>
+                <field id="add_sku_to_child_url_key" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add SKU to URL Key of child products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="add_sku_to_parent_url_key" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add SKU to URL Key of parent products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="category" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Category Configuration</label>
+                <field id="assignation_mode" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Assignation Mode</label>
+                    <source_model>Staempfli\CommerceImport\Model\Config\Source\CategoryAssignationMode</source_model>
+                </field>
+                <field id="delete_old_assignations" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Delete Old Product Assignations</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled, product import will overwrite already existing product category assignations</comment>
+                </field>
+                <field id="skip" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Skip Categories</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="level" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Level</label>
+                    <comment>All categories higher than the configured level will be skipped during the import if Skip Categories is enabled </comment>
+                    <depends>
+                        <field id="skip">1</field>
+                    </depends>
+                    <validate>required-entry</validate>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+            </group>
+            <group id="attribute" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Attribute Configuration</label>
+                <field id="keep_magento_sort_order" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Keep Magento Sort Order in Attribute Set</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled, attribute set order defined in Magento will not 1be overwritten by mS3 import</comment>
+                </field>
+            </group>
+            <group id="reader" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Reader Configuration</label>
+                <field id="ignore_invalid_images" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Ignore Invalid Images</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Ignore non existing or invalid images during processing</comment>
+                </field>
+                <field id="handle_special_chars" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Handle Special Chars</label>
+                    <source_model>Staempfli\CommerceImport\Model\Config\Source\SpecialChars</source_model>
+                    <comment></comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Staempfli\CommerceImport\Api\Data\CategoryReaderInterface" type="Staempfli\CommerceImport\Model\Reader\Category" />
+    <preference for="Staempfli\CommerceImport\Api\Data\ProductReaderInterface" type="Staempfli\CommerceImport\Model\Reader\Product" />
+    <preference for="Staempfli\CommerceImport\Api\Data\PriceReaderInterface" type="Staempfli\CommerceImport\Model\Reader\Price" />
+    <preference for="Staempfli\CommerceImport\Api\Data\AttributeReaderInterface" type="Staempfli\CommerceImport\Model\Reader\Attribute" />
+    <preference for="Staempfli\CommerceImport\Api\Data\AttributeImportInterface" type="Staempfli\CommerceImport\Model\Import\Attribute" />
+    <preference for="Staempfli\CommerceImport\Api\Data\ProductImportInterface" type="Staempfli\CommerceImport\Model\Import\Product" />
+    <preference for="Staempfli\CommerceImport\Api\Data\PriceImportInterface" type="Staempfli\CommerceImport\Model\Import\Price" />
+    <preference for="Staempfli\CommerceImport\Api\Data\CategoryImportInterface" type="Staempfli\CommerceImport\Model\Import\Category" />
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="databaseConfigCommand" xsi:type="object">Staempfli\CommerceImport\Console\Command\DatabaseConfigCommand</item>
+                <item name="databaseImportCommand" xsi:type="object">Staempfli\CommerceImport\Console\Command\DatabaseImportCommand</item>
+                <item name="removeCommand" xsi:type="object">Staempfli\CommerceImport\Console\Command\RemoveCommand</item>
+                <item name="importCommand" xsi:type="object">Staempfli\CommerceImport\Console\Command\ImportCommand</item>
+                <item name="categoryCopyDataCommand" xsi:type="object">Staempfli\CommerceImport\Console\Command\CategoryCopyDataCommand</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Eav\Model\Entity\Setup\PropertyMapper\Composite">
+        <arguments>
+            <argument name="propertyMappers" xsi:type="array">
+                <item name="commerce_import" xsi:type="string">Staempfli\CommerceImport\Model\ResourceModel\Setup\PropertyMapper</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- IMPORTANT: workaround to instantiate setup Class when compilation mode enabled -->
+    <type name="Staempfli\CommerceImport\Model\Utils\Attribute\AbstractAttribute">
+        <arguments>
+            <argument name="eavSetup" xsi:type="object">Staempfli\CommerceImport\Eav\Setup\EavSetup</argument>
+        </arguments>
+    </type>
+    <type name="Staempfli\CommerceImport\Model\Utils\Attribute\Attribute">
+        <arguments>
+            <argument name="eavSetup" xsi:type="object">Staempfli\CommerceImport\Eav\Setup\EavSetup</argument>
+        </arguments>
+    </type>
+    <type name="Staempfli\CommerceImport\Model\Utils\Attribute\AttributeGroup">
+        <arguments>
+            <argument name="eavSetup" xsi:type="object">Staempfli\CommerceImport\Eav\Setup\EavSetup</argument>
+        </arguments>
+    </type>
+    <type name="Staempfli\CommerceImport\Model\Utils\Attribute\AttributeSet">
+        <arguments>
+            <argument name="eavSetup" xsi:type="object">Staempfli\CommerceImport\Eav\Setup\EavSetup</argument>
+        </arguments>
+    </type>
+    <!-- We create our own virtual class because original Magento\Setup\Module\DataSetup cannot be instantiated when compilation enabled. -->
+    <virtualType name="Staempfli\CommerceImport\Eav\Setup\EavSetup" type="Magento\Eav\Setup\EavSetup">
+        <arguments>
+            <argument name="setup" xsi:type="object">Staempfli\CommerceImport\Setup\Module\DataSetup</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Staempfli\CommerceImport\Setup\Module\DataSetup" type="Magento\Setup\Module\DataSetup">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Framework\Module\Setup\Context</argument>
+        </arguments>
+    </virtualType>
+    <!-- End workaround -->
+    <type name="Magento\CatalogImportExport\Model\Import\Product\Type\Simple">
+        <plugin name="staempfli_commerce_import_simple_avoid_clean_empty_attributes" type="Staempfli\CommerceImport\Plugin\ProductEmptyDataPlugin" sortOrder="1"/>
+    </type>
+    <type name="Magento\BundleImportExport\Model\Import\Product\Type\Bundle">
+        <plugin name="staempfli_commerce_import_bundle_avoid_clean_empty_attributes" type="Staempfli\CommerceImport\Plugin\ProductEmptyDataPlugin" sortOrder="1"/>
+    </type>
+    <type name="Magento\ConfigurableImportExport\Model\Import\Product\Type\Configurable">
+        <plugin name="staempfli_commerce_import_configurable_avoid_clean_empty_attributes" type="Staempfli\CommerceImport\Plugin\ProductEmptyDataPlugin" sortOrder="1"/>
+    </type>
+    <type name="Magento\DownloadableImportExport\Model\Import\Product\Type\Downloadable">
+        <plugin name="staempfli_commerce_import_downloadable_avoid_clean_empty_attributes" type="Staempfli\CommerceImport\Plugin\ProductEmptyDataPlugin" sortOrder="1"/>
+    </type>
+    <type name="Magento\GroupedImportExport\Model\Import\Product\Type\Grouped">
+        <plugin name="staempfli_commerce_import_grouped_avoid_clean_empty_attributes" type="Staempfli\CommerceImport\Plugin\ProductEmptyDataPlugin" sortOrder="1"/>
+    </type>
+
+    <!-- fix for mass action update -->
+    <preference for="Magento\Catalog\Helper\Product\Edit\Action\Attribute" type="Staempfli\CommerceImport\Helper\Catalog\Helper\Product\Edit\Action\Attribute" />
+    <!-- end fix -->
+
+    <!-- fix attribute configuration mapping, to able to keep current attribute configuration in database -->
+    <type name="Magento\Catalog\Model\ResourceModel\Setup\PropertyMapper">
+        <plugin name="staempfli_commerce_catalog_attribute_mapping_fix" type="Staempfli\CommerceImport\Plugin\CatalogPropertyMapperPlugin" />
+    </type>
+    <!-- end fix -->
+
+    <type name="Staempfli\CommerceImport\Model\Reader\Product">
+        <arguments>
+            <argument name="categoryAssignationResource" xsi:type="object">Staempfli\CommerceImport\Model\ResourceModel\Category\CategoryAssignationResource\Proxy</argument>
+        </arguments>
+    </type>
+    <type name="Magento\CatalogImportExport\Model\Import\Product\CategoryProcessor">
+        <plugin name="staempfli_commerce_import_product_categories_using_ms3_ids" type="Staempfli\CommerceImport\Plugin\ProductCategoryAssignationPlugin" sortOrder="-99"/>
+    </type>
+    <type name="Magento\CatalogImportExport\Model\Import\Product">
+        <plugin name="staempfli_commerce_import_delete_old_category_product_assignation" type="Staempfli\CommerceImport\Plugin\DeleteOldProductCategoryAssignationPlugin"/>
+    </type>
+</config>
