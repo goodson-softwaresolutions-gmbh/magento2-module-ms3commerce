@@ -247,9 +247,11 @@ class Product extends AbstractReader implements ProductReaderInterface
             $this->setAdditionalImages($product);
             $this->setUniqueUrlKey($product);
 
+/*
             if ($product['product_type'] != 'grouped') {
                 $product['visibility'] = __('Not Visible Individually');
             }
+*/
 
             if (false === $this->isPrimaryStructureMaster()) {
                 $this->removeStructureMasterOnlyData($product);
