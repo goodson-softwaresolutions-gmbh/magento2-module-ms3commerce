@@ -127,6 +127,7 @@ class Product extends AbstractImport implements ProductImportInterface
         $this->getImportUtils()
             ->getEventManager()
             ->dispatch('import_products_before', ['products' => $this->products]);
+        $this->getImportUtils()->getProductMediaUtils()->deleteExistingMediaFiles($this->products);
         if (!$this->importProcessor->processImport()) {
             throw new \Exception($this->importProcessor->getLogTrace());
         }

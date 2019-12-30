@@ -7,6 +7,7 @@ namespace Staempfli\CommerceImport\Model\Utils\Entity\Product;
 
 use Magento\Catalog\Api\ProductAttributeMediaGalleryManagementInterface;
 use Magento\Catalog\Model\ProductFactory;
+use Magento\Framework\Filesystem\DirectoryList;
 use Staempfli\CommerceImport\Model\Config;
 use Staempfli\CommerceImport\Model\Utils\StoreFactory;
 
@@ -36,17 +37,50 @@ class Media
      * @var Config
      */
     private $config;
+    /**
+     * @var \Magento\Framework\App\Filesystem\DirectoryList
+     */
+    private $directoryList;
+
+    /**
+     * @var \Magento\CatalogImportExport\Model\Import\Product\MediaGalleryProcessor
+     */
+    private $mediaProcessor;
+
+    private const PRODUCT_IMAGE_RELATIVE_PATH = '/catalog/product';
 
     public function __construct(
         ProductFactory $productFactory,
         StoreFactory $storeFactory,
         Config $config,
-        ProductAttributeMediaGalleryManagementInterface $attributeMediaGalleryManagement
+        ProductAttributeMediaGalleryManagementInterface $attributeMediaGalleryManagement,
+        \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
+        \Magento\CatalogImportExport\Model\Import\Product\MediaGalleryProcessor $mediaProcessor
     ) {
         $this->productFactory = $productFactory;
         $this->storeFactory = $storeFactory;
         $this->attributeMediaGalleryManagement = $attributeMediaGalleryManagement;
         $this->config = $config;
+        $this->directoryList = $directoryList;
+        $this->mediaProcessor = $mediaProcessor;
+    }
+
+    /**
+     * @param array $products
+     */
+    public function deleteExistingMediaFiles(array $products = [])
+    {
+        $existingMedias = $this->mediaProcessor->getExistingImages($products);
+
+        foreach ($existingMedias as $media) {
+            foreach ($media as $file) {
+                $fileName = $file['value'];
+                $path = $this->directoryList->getPath(\Magento\Framework\App\Filesystem\DirectoryList::MEDIA) . self::PRODUCT_IMAGE_RELATIVE_PATH . $fileName;
+                if (file_exists($path)) {
+                    @unlink($path);
+                }
+            }
+        }
     }
 
     /**
