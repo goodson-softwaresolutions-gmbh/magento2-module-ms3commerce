@@ -170,7 +170,7 @@ class Collection extends AbstractCollection
         $positions = explode(',', $row['positions']);
         $linkedSkus = [];
         foreach ($destinations as $key => $destinationId) {
-            if (isset($this->_items[$destinationId])) {
+            if (isset($this->_items[$destinationId]) && $row['type_id'] < 10) {
                 $linkedSkus[] = $this->_items[$destinationId]['sku'];
             } else {
                 unset($positions[$key]);
