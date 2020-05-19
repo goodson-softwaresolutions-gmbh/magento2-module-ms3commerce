@@ -147,6 +147,7 @@ class Product extends AbstractImport implements ProductImportInterface
     {
         $this->products = [];
         $this->existingProducts = [];
+        $this->productReader->cleanModelCache();
     }
 
     /**

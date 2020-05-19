@@ -63,6 +63,10 @@ class Product extends AbstractDb
      * @var Config
      */
     protected $config;
+    /**
+     * @var array
+     */
+    private $attributeCollectionCache = [];
 
     /**
      * Product constructor.
@@ -181,6 +185,10 @@ class Product extends AbstractDb
         }
     }
 
+    public function cleanAttributeValueCache() {
+        $this->attributeCollectionCache = [];
+    }
+
     /**
      * @param int|null $marketId
      * @param int|null $langId
@@ -188,6 +196,10 @@ class Product extends AbstractDb
      */
     protected function getAttributeCollection($marketId = null, $langId = null)
     {
+        $key = "$marketId|$langId";
+        if (array_key_exists($key, $this->attributeCollectionCache)) {
+            return $this->attributeCollectionCache[$key];
+        }
         /** @var $collection \Staempfli\CommerceImport\Model\ResourceModel\Attribute\Collection */
         $collection = $this->attributeFactory->create()->getCollection();
         $collection->addFieldToFilter('entity_type', AbstractReader::ATTRIBUTE_ENTITY_PRODUCT);
@@ -198,6 +210,7 @@ class Product extends AbstractDb
             $collection->addFieldToFilter('lang_id', $langId);
         }
         $collection->addAttributeValues();
+        $this->attributeCollectionCache[$key] = $collection;
         return $collection;
     }
 

@@ -263,6 +263,12 @@ class Product extends AbstractReader implements ProductReaderInterface
         $this->getReaderUtils()->getConsoleOutput()->finishProgress();
     }
 
+    public function cleanModelCache()
+    {
+        $this->getResource()->cleanAttributeValueCache();
+        return parent::cleanModelCache();
+    }
+
     protected function setCustomAttributes(array &$product)
     {
         $additional = [];
