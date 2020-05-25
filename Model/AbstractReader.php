@@ -33,7 +33,7 @@ abstract class AbstractReader extends \Magento\Framework\Model\AbstractModel
     const ATTRIBUTE_TYPE_MULITSELECT = 4;
     const ATTRIBUTE_TYPE_SELECT = 5;
 
-    const PRODUCT_MAX_IMAGES = 10;
+    const PRODUCT_MAX_IMAGES = 15;
 
     /**
      * @var int

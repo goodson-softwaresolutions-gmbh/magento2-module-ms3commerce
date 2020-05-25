@@ -211,12 +211,22 @@ class Product extends AbstractReader implements ProductReaderInterface
         }
     }
 
+    private static function its() {
+        return ['_s'=>microtime(true)];
+    }
+    private static function ts(&$s, $name) {
+        $t = microtime(true);
+        $s[$name] = $t-$s['_s'];
+        $s['_s'] = $t;
+    }
+
     protected function prepareProducts()
     {
         $this->products = [];
         $this->urlRewriteCleaner->cleanProductUrlRewrites();
         $this->getReaderUtils()->getConsoleOutput()->startProgress($this->productCollection->getSize());
         foreach ($this->productCollection as $item) {
+            $ss = self::its();
             $this->getReaderUtils()->getConsoleOutput()->advanceProgress();
             $product = array_merge($this->defaultProductAttributes, $item->getData());
 
@@ -224,13 +234,17 @@ class Product extends AbstractReader implements ProductReaderInterface
                 $this->removeInvalidImages($product);
             }
 
+            self::ts($ss, 'img');
+
             $product = $this->getReaderUtils()
                 ->getMapper()
                 ->map($product, \Magento\Catalog\Model\Product::ENTITY, $this->getStore());
             $this->getReaderUtils()
                 ->getEventManager()
                 ->dispatch('reader_prepare_product_before', ['product' => $product]);
+            self::ts($ss, 'map');
             $this->validateProduct($product);
+            self::ts($ss, 'val');
             if (!$this->shouldAddProduct($product)) {
                 $this->getReaderUtils()->getConsoleOutput()->comment(sprintf(
                     'Product not added [sku: %s]. Product not existing in Master Data',
@@ -241,11 +255,18 @@ class Product extends AbstractReader implements ProductReaderInterface
             $product['visibility'] = __('Catalog, Search');
 
             $this->handleSpecialChars($product, ['name']);
+            self::ts($ss, 'handle chars');
             $this->setCustomAttributes($product);
+            self::ts($ss, 'handle custom');
             $this->setProductCategories($product);
+            self::ts($ss, 'handle cats');
             $this->setStoreAndWebsite($product);
+            self::ts($ss, 'handle store');
             $this->setAdditionalImages($product);
+            self::ts($ss, 'handle imgs');
             $this->setUniqueUrlKey($product);
+            self::ts($ss, 'handle url');
+
 
             if ($product['product_type'] == 'virtual') {
                 $product['visibility'] = __('Not Visible Individually');
@@ -259,6 +280,7 @@ class Product extends AbstractReader implements ProductReaderInterface
                 ->dispatch('reader_prepare_product_after', ['product' => $product]);
 
             $this->addProduct($product);
+            self::ts($ss, 'end');
         }
         $this->getReaderUtils()->getConsoleOutput()->finishProgress();
     }
@@ -358,6 +380,10 @@ class Product extends AbstractReader implements ProductReaderInterface
             if (isset($product['image_' . $x])) {
                 $images[] = $product['image_' . $x];
                 $labels[] = (isset($product['image_' . $x . '_label'])) ? $product['image_' . $x . '_label'] : '';
+            }
+            if (isset($product['ms_image_' . $x])) {
+                $images[] = $product['ms_image_' . $x];
+                $labels[] = (isset($product['ms_image_' . $x . '_label'])) ? $product['ms_image_' . $x . '_label'] : '';
             }
         }
         $product['additional_images'] = implode(

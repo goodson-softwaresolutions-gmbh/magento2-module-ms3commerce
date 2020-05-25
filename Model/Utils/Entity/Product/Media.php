@@ -7,6 +7,7 @@ namespace Staempfli\CommerceImport\Model\Utils\Entity\Product;
 
 use Magento\Catalog\Api\ProductAttributeMediaGalleryManagementInterface;
 use Magento\Catalog\Model\ProductFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Filesystem\DirectoryList;
 use Staempfli\CommerceImport\Model\Config;
 use Staempfli\CommerceImport\Model\Utils\StoreFactory;
@@ -149,11 +150,15 @@ class Media
         $entity = null;
         if (isset($product['additional_images']) && isset($product['additional_image_labels'])) {
             foreach (explode($this->config->getMultipleValuesSeparator(), $product['additional_images']) as $image) {
-                $images[] = pathinfo($image, PATHINFO_BASENAME);
+                $images[] = strtolower(pathinfo($image, PATHINFO_BASENAME));
             }
 
             $labels = explode($this->config->getMultipleValuesSeparator(), $product['additional_image_labels']);
-            $existing = $this->attributeMediaGalleryManagement->getList($product['sku']);
+            try {
+                $existing = $this->attributeMediaGalleryManagement->getList($product['sku']);
+            } catch (NoSuchEntityException $e) {
+                $existing = [];
+            }
             if (isset($existing[0])) {
                 $entity = $existing[0]->getEntityId();
             }
