@@ -361,6 +361,7 @@ class ImportCommand extends AbstractCommand
         $this->getImportInformation();
         $this->validateMappingConfiguration();
         $this->makeBackup();
+        $this->prepareDatabase();
     }
 
     /**
@@ -617,6 +618,11 @@ class ImportCommand extends AbstractCommand
             $backupDb->createBackup($backup);
             $this->getConsoleOutput()->info($backup->getFileName());
         }
+    }
+
+    private function prepareDatabase()
+    {
+        $this->getReader()->prepareDatabase();
     }
 
     /**

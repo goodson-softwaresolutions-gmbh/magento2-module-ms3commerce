@@ -110,6 +110,11 @@ class Reader extends AbstractReader
         return true;
     }
 
+    public function prepareDatabase()
+    {
+        $this->getConnection()->query('SET SESSION group_concat_max_len = 65536');
+    }
+
     /**
      * @return array
      * @throws \Exception
