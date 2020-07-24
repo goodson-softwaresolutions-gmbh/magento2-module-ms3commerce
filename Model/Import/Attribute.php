@@ -85,6 +85,7 @@ class Attribute extends AbstractImport implements AttributeImportInterface
      */
     protected function prepareAttributes()
     {
+        $this->totalAttributes = 0;
         foreach ($this->attributes as $entity => $attribute) {
             foreach ($attribute as $code => $row) {
                 $this->totalAttributes++;

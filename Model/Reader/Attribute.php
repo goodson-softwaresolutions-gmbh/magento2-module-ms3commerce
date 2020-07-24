@@ -150,6 +150,7 @@ class Attribute extends AbstractReader implements AttributeReaderInterface
     protected function prepareAttributes(AttributeCollection $collection)
     {
         $this->getReaderUtils()->getConsoleOutput()->startProgress($collection->getSize());
+        $this->attributes = [];
         foreach ($collection as $item) {
             $this->getReaderUtils()->getConsoleOutput()->advanceProgress();
             $entityType = $this->getEntityTypeById($item->getEntityType());
