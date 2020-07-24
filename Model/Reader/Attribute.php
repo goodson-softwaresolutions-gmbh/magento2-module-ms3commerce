@@ -118,6 +118,8 @@ class Attribute extends AbstractReader implements AttributeReaderInterface
     {
         /** @var $collection AttributeCollection */
         $collection = $this->getCollection()
+            ->addFilter('market_id', $this->marketId)
+            ->addFilter('lang_id', $this->langId)
             ->setOrder('main_table.group')
             ->setOrder('main_table.sort', 'asc');
 

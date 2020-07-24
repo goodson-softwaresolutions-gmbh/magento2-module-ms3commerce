@@ -245,9 +245,9 @@ class Attribute extends AbstractAttribute
             } else {
                 $this->updateAttributeOption($optionId, $attributeOptionData);
             }
-            if ($this->isMaster($data)) {
+            //if ($this->isMaster($data)) {
                 $this->setAttributeOptionValues($optionId, $mappingId);
-            }
+            //}
             $this->setAttributeOptionValues($optionId, $valueData['value'], $storeId);
             $this->updateCommerceMappingTable($optionId, $attribute->getAttributeId(), $mappingId);
         }

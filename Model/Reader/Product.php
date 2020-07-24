@@ -309,6 +309,9 @@ class Product extends AbstractReader implements ProductReaderInterface
 
     protected function setProductCategories(array &$product)
     {
+        if (!$this->isStructureMaster()) {
+            return;
+        }
         $categoryAssignationMode = $this->getReaderUtils()->getConfig()->categoryAssignationMode();
         if ($categoryAssignationMode === CategoryAssignationMode::MODE_MS3_IDS) {
             $categories = $this->categoryAssignationResource->getCategoryIdsFromProductMsId($product['ms3_id'], $this->getStore());
