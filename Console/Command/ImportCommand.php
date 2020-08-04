@@ -56,6 +56,7 @@ class ImportCommand extends AbstractCommand
     const OPTION_IMPORT_PRODUCT_SKUS = 'only-skus';
     const OPTION_IMPORT_FORCE = 'force';
     const OPTION_NOTIFY = 'notify';
+    const OPTION_IMPORT_STORES = 'only-stores';
 
     /**
      * @var bool
@@ -274,7 +275,14 @@ class ImportCommand extends AbstractCommand
                     self::OPTION_VALUE_FALSE
                 ),
                 self::OPTION_VALUE_TRUE
-            );
+            )
+            ->addOption(
+                self::OPTION_IMPORT_STORES,
+                'ss',
+                InputOption::VALUE_REQUIRED,
+                'Import only specific stores (coma separated values)',
+                ''
+            )
         ;
     }
 
@@ -701,6 +709,16 @@ class ImportCommand extends AbstractCommand
     {
         if (!$this->stores) {
             $this->stores = $this->getReader()->getStores();
+
+            $onlyStores = $this->input->getOption(self::OPTION_IMPORT_STORES);
+            if (!empty($onlyStores)) {
+                $onlyStores = explode(',',$onlyStores);
+                foreach ($this->stores as $k => $store) {
+                    if (!in_array($store->getId(), $onlyStores)) {
+                        unset($this->stores[$k]);
+                    }
+                }
+            }
         }
         return $this->stores;
     }
