@@ -127,13 +127,17 @@ class Product extends AbstractImport implements ProductImportInterface
         $this->getImportUtils()
             ->getEventManager()
             ->dispatch('import_products_before', ['products' => $this->products]);
-        $this->getImportUtils()->getProductMediaUtils()->deleteExistingMediaFiles($this->products);
+        // If this is needed by project, make a import_products_before observer instead:
+        //$this->getImportUtils()->getProductMediaUtils()->deleteExistingMediaFiles($this->products);
         if (!$this->importProcessor->processImport()) {
             throw new \Exception($this->importProcessor->getLogTrace());
         }
         $this->getImportUtils()->getConsoleOutput()->info($this->importProcessor->getLogTrace());
         $this->getImportUtils()->getConsoleOutput()->title('Update media values');
-        $this->getImportUtils()->getProductMediaUtils()->updateMediaValues($this->products);
+        foreach ($this->stores as $store) {
+            $this->getImportUtils()->getProductMediaUtils()->updateMediaValues($this->products, $store);
+        }
+
         $this->getImportUtils()->getConsoleOutput()->info('done');
 
         $this->getImportUtils()->getEventManager()->dispatch('import_products_after', ['products' => $this->products]);

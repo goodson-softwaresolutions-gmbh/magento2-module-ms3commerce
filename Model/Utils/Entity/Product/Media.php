@@ -87,9 +87,9 @@ class Media
     /**
      * @param array $products
      */
-    public function updateMediaValues(array $products = [])
+    public function updateMediaValues(array $products = [], $store = null)
     {
-        $storeId = $this->storeFactory->create()->getCurrentStore()->getStoreId();
+        $storeId = $store->getId();
         foreach ($products as $product) {
             $mediaData = $this->getMediaDataFromProduct($product);
 

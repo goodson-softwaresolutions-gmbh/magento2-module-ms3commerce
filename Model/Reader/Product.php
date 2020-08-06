@@ -241,7 +241,7 @@ class Product extends AbstractReader implements ProductReaderInterface
                 ->map($product, \Magento\Catalog\Model\Product::ENTITY, $this->getStore());
             $this->getReaderUtils()
                 ->getEventManager()
-                ->dispatch('reader_prepare_product_before', ['product' => $product]);
+                ->dispatch('reader_prepare_product_before', ['product' => &$product]);
             self::ts($ss, 'map');
             $this->validateProduct($product);
             self::ts($ss, 'val');
@@ -277,7 +277,7 @@ class Product extends AbstractReader implements ProductReaderInterface
             }
             $this->getReaderUtils()
                 ->getEventManager()
-                ->dispatch('reader_prepare_product_after', ['product' => $product]);
+                ->dispatch('reader_prepare_product_after', ['product' => &$product]);
 
             $this->addProduct($product);
             self::ts($ss, 'end');
@@ -383,10 +383,6 @@ class Product extends AbstractReader implements ProductReaderInterface
             if (isset($product['image_' . $x])) {
                 $images[] = $product['image_' . $x];
                 $labels[] = (isset($product['image_' . $x . '_label'])) ? $product['image_' . $x . '_label'] : '';
-            }
-            if (isset($product['ms_image_' . $x])) {
-                $images[] = $product['ms_image_' . $x];
-                $labels[] = (isset($product['ms_image_' . $x . '_label'])) ? $product['ms_image_' . $x . '_label'] : '';
             }
         }
         $product['additional_images'] = implode(
