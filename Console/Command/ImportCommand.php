@@ -302,7 +302,11 @@ class ImportCommand extends AbstractCommand
                     Status::IMPORT_STATUS_READY
                 )
             );
-            exit(Cli::RETURN_FAILURE); //@codingStandardsIgnoreLine
+            //exit(Cli::RETURN_FAILURE); //@codingStandardsIgnoreLine
+            throw new \Exception(sprintf(
+                'Import Status is not valid to start import. Status must be "%s"',
+                Status::IMPORT_STATUS_READY
+            ));
         }
     }
 
@@ -333,6 +337,7 @@ class ImportCommand extends AbstractCommand
             $this->runImports();
             $this->reindex();
             $this->cleanCache();
+            $this->clear();
         } catch (\Throwable $e) {
             $this->status->updateStatusFailed();
             $errorMessage = sprintf(
@@ -354,7 +359,7 @@ class ImportCommand extends AbstractCommand
             $this->stringifyConfigurationMapping($this->mappingConfiguration)
         );
         $this->notify($successMessage);
-        exit(Cli::RETURN_SUCCESS); //@codingStandardsIgnoreLine
+        //exit(Cli::RETURN_SUCCESS); //@codingStandardsIgnoreLine
     }
 
     private function prepareImportBeforeRunning()
@@ -795,5 +800,16 @@ class ImportCommand extends AbstractCommand
             $marketId,
             $langId
         );
+    }
+
+    private function clear()
+    {
+        $this->reader = null;
+        $this->store = null;
+        $this->stores = null;
+        $this->attributeImport->clearMemory();
+        $this->categoryImport->clearMemory();
+        $this->productImport->clearMemory();
+        $this->priceImport->clearMemory();
     }
 }

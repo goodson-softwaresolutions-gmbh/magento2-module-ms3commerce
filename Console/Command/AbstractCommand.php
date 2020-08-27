@@ -118,7 +118,8 @@ class AbstractCommand extends Command
         $error = $throwable->getMessage() . ' in ' . $throwable->getFile() . ':' . $throwable->getLine();
         $trace = $throwable->getTraceAsString();
         $this->getConsoleOutput()->error($error . PHP_EOL . $trace);
-        exit(Cli::RETURN_FAILURE); //@codingStandardsIgnoreLine
+        //exit(Cli::RETURN_FAILURE); //@codingStandardsIgnoreLine
+        throw $throwable;
     }
 
     protected function updateVerbosityForError(InputInterface $input, OutputInterface $output)
