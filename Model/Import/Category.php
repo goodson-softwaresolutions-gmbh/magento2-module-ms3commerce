@@ -106,8 +106,8 @@ class Category extends AbstractImport implements CategoryImportInterface
     {
         $this->categories = [];
         $this->categoryCache = [];
-        $this->categoryReader->reset();
-        $this->getImportUtils()->getCategoryUtils()->reset();
+        $this->categoryReader->clearInstance();
+        $this->getImportUtils()->reset();
     }
 
     /**

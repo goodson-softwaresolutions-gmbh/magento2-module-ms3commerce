@@ -104,4 +104,11 @@ class Import extends AbstractUtils
         }
         return $this->productMediaUtils;
     }
+
+    public function reset()
+    {
+        parent::reset();
+        $this->productMediaUtils = null;
+        $this->attributeGroupUtils = null;
+    }
 }

@@ -81,6 +81,18 @@ class Price extends AbstractReader implements PriceReaderInterface
         $this->productCollection = $productFactory->create()->getCollection();
     }
 
+    public function clearInstance()
+    {
+        $this->productIdSkuPairs = [];
+        $this->productPricesToImport = [];
+        $this->pricesData = [];
+        if ($this->priceCollection) $this->priceCollection->resetData();
+        if ($this->productCollection) $this->productCollection->resetData();
+        $this->websiteCode = null;
+        return parent::clearInstance();
+    }
+
+
     /**
      * @param array $productSkus
      */

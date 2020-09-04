@@ -159,6 +159,15 @@ class Product extends AbstractReader implements ProductReaderInterface
         $this->importProductCollectionFactory = $importProductCollectionFactory;
     }
 
+    public function clearInstance()
+    {
+        $this->products = [];
+        $this->productSkus = [];
+        $this->categoryAssignationResource->reset();
+        $this->categoriesBySku = [];
+        return parent::clearInstance();
+    }
+
     public function setProductSkusFilter(array $productSkus)
     {
         $this->productSkus = $productSkus;

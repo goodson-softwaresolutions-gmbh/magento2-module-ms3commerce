@@ -200,4 +200,12 @@ abstract class AbstractUtils
     {
         return $this->tierPrice;
     }
+
+    public function reset() {
+        $this->productUtils = null;
+        $this->categoryUtils = null;
+        $this->attributeUtils = null;
+        $this->attributeSetUtils = null;
+        $this->store = null;
+    }
 }

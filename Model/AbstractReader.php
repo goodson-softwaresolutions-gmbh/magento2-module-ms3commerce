@@ -187,6 +187,16 @@ abstract class AbstractReader extends \Magento\Framework\Model\AbstractModel
         return $this->readerUtils;
     }
 
+    public function clearInstance()
+    {
+        $this->marketId = 0;
+        $this->langId = 0;
+        $this->stores = null;
+        $this->store = null;
+        $this->readerUtils->reset();
+        return parent::clearInstance();
+    }
+
     /**
      * @param array $entityData
      * @param array $fields

@@ -188,4 +188,11 @@ abstract class AbstractImportProcessor
     {
         return $this->logTrace;
     }
+
+    public function reset() {
+        $this->importData = [];
+        $this->logTrace = '';
+        $this->validationResult = null;
+        $this->importModel = null;
+    }
 }

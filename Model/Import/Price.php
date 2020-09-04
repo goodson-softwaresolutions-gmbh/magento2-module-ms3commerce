@@ -139,5 +139,9 @@ class Price extends AbstractImport implements PriceImportInterface
     {
         $this->productPricesToDelete = [];
         $this->productPricesToImport = [];
+        $this->onlyProductSkus = [];
+        $this->importProcessor->reset();
+        $this->priceReader->clearInstance();
+        $this->getImportUtils()->reset();
     }
 }

@@ -36,10 +36,11 @@ class Category extends AbstractReader implements CategoryReaderInterface
     }
     // @codingStandardsIgnoreEnd
 
-    public function reset()
+    public function clearInstance()
     {
         $this->categories = [];
         $this->existingMSCategories = [];
+        return parent::clearInstance();
     }
 
     /**

@@ -155,6 +155,9 @@ class Attribute extends AbstractImport implements AttributeImportInterface
         $this->attributeSets = [];
         $this->attributeGroups = [];
         $this->lockedAttributes = [];
+        $this->totalAttributes = 0;
+        $this->attributeReader->clearInstance();
+        $this->getImportUtils()->reset();
     }
 
     /**
