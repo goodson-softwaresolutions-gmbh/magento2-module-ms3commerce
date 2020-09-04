@@ -10,26 +10,7 @@ use Magento\ImportExport\Model\Import\ErrorProcessing\ProcessingError;
 
 class ProductImportProcessor extends AbstractImportProcessor
 {
-    /**
-     * @return bool
-     * @throws \Exception
-     */
-    public function processImport()
-    {
-        if ($this->validateAndSetDataInTable()) {
-            $resultImport = $this->getImportModel()->importSource();
-            if ($this->config->isStructureMaster()) {
-                $resultProductSorting = $this->updateProductCategoryAssignation();
-                $resultImport = $resultImport && $resultProductSorting;
-            }
-            $this->handleImportResult();
-            return $resultImport;
-        }
-
-        throw new \Exception($this->getLogTrace());
-    }
-
-    protected function updateProductCategoryAssignation() : bool
+    public function updateProductCategoryAssignation() : bool
     {
         try {
             $this->categoryAssignation->updateAssignationPosition();

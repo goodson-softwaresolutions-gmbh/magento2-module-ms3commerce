@@ -127,11 +127,19 @@ class Product extends AbstractImport implements ProductImportInterface
         $this->getImportUtils()
             ->getEventManager()
             ->dispatch('import_products_before', ['products' => $this->products]);
-        // If this is needed by project, make a import_products_before observer instead:
+
+        // NOTICE: If deleting media files before import is needed, make a import_products_before observer instead:
         //$this->getImportUtils()->getProductMediaUtils()->deleteExistingMediaFiles($this->products);
+
         if (!$this->importProcessor->processImport()) {
             throw new \Exception($this->importProcessor->getLogTrace());
         }
+        if ($this->hasStructureMasterImport()) {
+            if (!$this->importProcessor->updateProductCategoryAssignation()) {
+                throw new \Exception($this->importProcessor->getLogTrace());
+            }
+        }
+
         $this->getImportUtils()->getConsoleOutput()->info($this->importProcessor->getLogTrace());
         $this->getImportUtils()->getConsoleOutput()->title('Update media values');
         foreach ($this->stores as $store) {
@@ -142,6 +150,15 @@ class Product extends AbstractImport implements ProductImportInterface
 
         $this->getImportUtils()->getEventManager()->dispatch('import_products_after', ['products' => $this->products]);
         $this->detachInactiveProductsFromWebsite();
+    }
+
+    protected function hasStructureMasterImport() {
+        foreach ($this->stores as $store) {
+            if ($this->getImportUtils()->getConfig()->isPrimaryStructureMaster($store)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
