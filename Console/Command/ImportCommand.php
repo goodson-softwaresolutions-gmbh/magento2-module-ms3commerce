@@ -339,13 +339,13 @@ class ImportCommand extends AbstractCommand
             $this->cleanCache();
             $this->clear();
         } catch (\Throwable $e) {
-            $this->status->updateStatusFailed();
             $errorMessage = sprintf(
                 "%s\n%s\nError Trace: %s",
                 $this->stringifyConfigurationMapping($this->mappingConfiguration),
                 $e->getMessage(),
                 $e->getTraceAsString()
             );
+            $this->status->updateStatusFailed($errorMessage);
             $this->notify($errorMessage);
             throw new \Exception($errorMessage);
         }

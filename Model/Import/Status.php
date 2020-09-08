@@ -81,10 +81,14 @@ class Status
     /**
      * Update status when import fails
      */
-    public function updateStatusFailed()
+    public function updateStatusFailed($errorMessage = null)
     {
         $this->resetStatuses();
-        $this->pubDirectory->touch($this->getRelativeFilePath(self::IMPORT_STATUS_FAILED));
+        if (!$errorMessage) {
+            $this->pubDirectory->touch($this->getRelativeFilePath(self::IMPORT_STATUS_FAILED));
+        } else {
+            $this->pubDirectory->writeFile($this->getRelativeFilePath(self::IMPORT_STATUS_FAILED), $errorMessage);
+        }
     }
 
     /**
