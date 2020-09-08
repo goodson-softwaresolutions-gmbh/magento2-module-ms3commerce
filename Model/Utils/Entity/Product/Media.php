@@ -119,8 +119,8 @@ class Media
                     if (in_array($row['image'], $mediaData['images'])) {
                         $data = $row;
                         $position = $data['position'];
-                        $data['label'] = (isset($mediaData['labels'][$position]))
-                            ? $mediaData['labels'][$position]
+                        $data['label'] = (isset($mediaData['labels'][$position-1]))
+                            ? $mediaData['labels'][$position-1]
                             : '';
                         $data['store_id'] = $storeId;
                         unset($data['image']);
