@@ -233,6 +233,7 @@ class Product extends AbstractReader implements ProductReaderInterface
     {
         $this->products = [];
         $this->urlRewriteCleaner->cleanProductUrlRewrites();
+        $this->getReaderUtils()->getProductUrlKey()->setStoreId($this->getStore()->getId());
         $this->getReaderUtils()->getConsoleOutput()->startProgress($this->productCollection->getSize());
         foreach ($this->productCollection as $item) {
             $ss = self::its();

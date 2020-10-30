@@ -26,6 +26,7 @@ abstract class AbstractUrlKey
     protected $urlKey;
     protected $urlKeys = [];
     protected $processedUrlKeys = [];
+    protected $storeId = 0;
 
     protected $entityAttributeIds = [
         Category::ENTITY => [],
@@ -45,6 +46,14 @@ abstract class AbstractUrlKey
         $this->resourceConnection = $resourceConnection;
         $this->eavConfig = $eavConfig;
         $this->entityType = $this->getEntityType();
+    }
+
+    public function setStoreId($id)
+    {
+        $this->storeId = $id;
+        if (!array_key_exists($this->storeId, $this->processedUrlKeys)) {
+            $this->processedUrlKeys[$this->storeId] = [];
+        }
     }
 
     abstract protected function getEntityType();
@@ -72,7 +81,7 @@ abstract class AbstractUrlKey
         if ($this->existAnotherEntityWithSameUrlKey()) {
             return false;
         }
-        if (in_array($this->urlKey, $this->processedUrlKeys)) {
+        if (in_array($this->urlKey, $this->processedUrlKeys[$this->storeId])) {
             return false;
         }
         return true;
@@ -152,6 +161,6 @@ abstract class AbstractUrlKey
 
     protected function updateProcessedUrlKeyList()
     {
-        $this->processedUrlKeys[] = $this->urlKey;
+        $this->processedUrlKeys[$this->storeId][] = $this->urlKey;
     }
 }

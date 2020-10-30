@@ -90,6 +90,7 @@ class Category extends AbstractReader implements CategoryReaderInterface
             ->addFilter('market_id', $this->marketId)
             ->addFilter('lang_id', $this->langId)
             ->setOrder('level', 'asc');
+        $this->getReaderUtils()->getCategoryUrlKey()->setStoreId($this->getStore()->getId());
         $this->getReaderUtils()->getConsoleOutput()->startProgress($collection->getSize());
         foreach ($collection as $item) {
             $this->getReaderUtils()->getConsoleOutput()->advanceProgress();
