@@ -103,12 +103,18 @@ class CategoryAssignationResource
                     'product_id as product_ms_id',
                     $this->getDbSchemaName(CommerceImportSetupConfig::DB_CONNECTION_SETUP)
                 )
+                ->joinInner(
+                    ['m2m_cat' => $this->importConnection->getTableName('m2m_category')],
+                    'm2m_cat.id = m2m_prod_cat.category_id',
+                    '',
+                    $this->getDbSchemaName(CommerceImportSetupConfig::DB_CONNECTION_SETUP)
+                )
                 ->joinLeft(
                     ['mag_cat' => $this->magentoConnection->getTableName('catalog_category_entity_varchar')],
-                    "mag_cat.value = m2m_prod_cat.category_id",
-                    ['category_ids' => new \Zend_Db_Expr(sprintf('GROUP_CONCAT(entity_id SEPARATOR ",")'))]
+                    "mag_cat.value = m2m_cat.guid",
+                    ['category_ids' => new \Zend_Db_Expr(sprintf('GROUP_CONCAT(DISTINCT entity_id SEPARATOR ",")'))]
                 )
-                ->where("mag_cat.attribute_id = ?", $this->getMs3AttributeId(Category::ENTITY))
+                ->where("mag_cat.attribute_id = ?", $this->getMs3AttributeGuid(Category::ENTITY))
                 ->where("mag_cat.store_id = ?", $store->getId())
                 ->group(['product_ms_id']);
             $this->productMsIdCategoryIdPairs = $this->magentoConnection->fetchPairs($select);
@@ -178,6 +184,16 @@ class CategoryAssignationResource
             ->from(['eav_att' => $this->magentoConnection->getTableName('eav_attribute')], 'attribute_id')
             ->where('eav_att.entity_type_id = ?', $this->eavConfig->getEntityType($entityType)->getId())
             ->where('eav_att.attribute_code = ?', 'ms3_id');
+
+        return $this->magentoConnection->fetchOne($query);
+    }
+
+    private function getMs3AttributeGuid(string $entityType): string
+    {
+        $query = $this->magentoConnection->select()
+            ->from(['eav_att' => $this->magentoConnection->getTableName('eav_attribute')], 'attribute_id')
+            ->where('eav_att.entity_type_id = ?', $this->eavConfig->getEntityType($entityType)->getId())
+            ->where('eav_att.attribute_code = ?', 'ms3_guid');
 
         return $this->magentoConnection->fetchOne($query);
     }
